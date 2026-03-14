@@ -1,0 +1,23 @@
+clc; clear all; close all;
+x=input('Enter the sequence: ');
+n1=0:4;
+m=-fliplr(n1);
+y=fliplr(x);
+n2=-4:0;
+n=-4:4;
+y1=zeros(1, 9);
+y2=y1;
+y1 (find((n>=min(n1))&(n<=max(n1))==1))=x;
+y2 (find((n>=min(n2))&(n<=max(n2))==1))=y;
+subplot(2, 2, 1);
+stem(n1, x); xlabel('n->'); ylabel('x(n)'); title("Input sequence");
+subplot(2, 2, 2);
+stem(n2, y); xlabel('n->'); ylabel('x(-n)'); title("Reversal sequence");
+
+z1=0.5*(y1+y2);
+subplot(2, 2, 3);
+stem(n, z1); xlabel('n->');ylabel('z1(n)'); title("even");
+
+z2=0.5*(y1-y2);
+subplot(2,2,4);
+stem(n, z2);xlabel('n->'); ylabel("z2(n)"); title("Odd");

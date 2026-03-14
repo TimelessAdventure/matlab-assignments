@@ -1,0 +1,13 @@
+clc; close all; clear all;
+x=input('Enter the sequence: ');
+k1=input("Enter the amount to be delayed: ");
+k2=input('Enter the amount to be advanced: ');
+n=0:4;
+n1=n+k1;
+n2=n-k2;
+subplot(3, 2, 1);
+stem(n, x); xlabel('n->'); ylabel('x(n)'); title('Input sequence');
+subplot(3, 2, 2);
+stem(n1, x); xlabel('n->'); ylabel('x(n-k)'); title('Delayed sequence');
+subplot(3, 2, 3);
+stem(n2, x); xlabel('n->'); ylabel('x(n+k)'); title('Advanced sequence');

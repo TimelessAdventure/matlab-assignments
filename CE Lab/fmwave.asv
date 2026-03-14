@@ -1,0 +1,49 @@
+% FM Modulation and Demodulation
+clc; clear all; close all; 
+fm = 10; 
+fc=100;
+t=0:.0001:.25 ;
+N=length(t);
+fs = 1 / (t(2) - t(1));
+kf=2;
+%message
+x=sin(2*pi*fm*t);
+subplot(321);
+plot(t,x);
+title("Message wave"); xlabel("Time");ylabel("Amplitude");
+%Carrier
+y=sin(2*pi*fc*t);
+subplot(323);
+plot(t, y);
+title("Carrier wave"); xlabel("Time");ylabel("Amplitude");
+%fm wave
+fmsg=sin(2*pi*fc*t - kf*cos(2*pi*fm*t));
+subplot(325);
+plot(t, fmsg);
+title("Modulated wave"); xlabel("Time");ylabel("Amplitude");
+%spectra
+f=linspace(-fs/2, fs/2, N);
+sfm=fftshift(abs(fft(x)))/N;
+subplot(322); 
+plot(f,sfm);
+title("Spectrum of Message signal"); xlim([-500 500]);
+sfc=fftshift(abs(fft(y)))/N;
+subplot(324); 
+plot(f,sfc);
+title("Spectrum of Carrier signal"); xlim([-500 500]);
+sm=fftshift(abs(fft(fmsg)))/N;
+subplot(326); 
+plot(f,sm);
+xlim([-500 500]);
+%demod
+figure;
+subplot(211);
+z=hilbert(fmsg);
+inst_phase=unwrap(angle(z));
+offset=2*pi*fc*t;
+demodulatedSignal= (inst_phase - offset);
+plot(t, demodulatedSignal)
+title("Demodulate message wave"); xlabel("Time");ylabel("Amplitude");
+subplot(212);
+plot(t, x);
+title("Original message wave"); xlabel("Time");ylabel("Amplitude");

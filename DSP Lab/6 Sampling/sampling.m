@@ -1,0 +1,35 @@
+clc; clear all; close all;
+t=-100:0.1:100;
+fm=0.02;
+x=cos(2*pi*fm*t);
+subplot(221); 
+plot(t, x); 
+xlabel("Time in s->"); ylabel('x1(t)'); 
+title('Continuous time signal');
+fs1=0.02; n=-2:2;
+x1=cos(2*pi*fm*n/fs1);
+subplot(222);
+stem(n, x1); hold on;
+subplot(222);
+plot(n, x1, ':'); 
+title("Discrete time signal x(n) with fs<2fm");
+xlabel('n'); ylabel('x(n)');
+fs2=0.04;
+n1=-4:4;
+x2=cos(2*pi*fm*n1/fs2);
+subplot(223);
+stem(n1, x2);
+hold on
+subplot(223);
+plot(n1, x2, ':');
+title("Discrete time signal x(n) with fs>2fm");
+xlabel('n'); ylabel('x(n)'); 
+n2=-50:50;
+fs3=0.5;
+x3=cos(2*pi*fm*n2/fs3);
+subplot(224);
+stem(n2, x3);
+hold on
+subplot(224);
+plot(n2, x3, ':'); xlabel('n'); ylabel('x(n)');
+title("Discrete time signal x(n) with fs=2fm");

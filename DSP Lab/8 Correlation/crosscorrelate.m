@@ -1,0 +1,12 @@
+clc; clear all; close all; 
+x=input('Enter the sequence 1: ');
+h=input('Enter the sequence 2: ');
+y=xcorr(x, h);
+subplot(311);
+stem(x); xlabel('n->'); ylabel('Amplitude');
+title('Input sequence 1');
+subplot(312); stem(h); xlabel('n->'); 
+ylabel("Amplitude"); title("Input sequence 2");
+subplot(313); stem(fliplr(y)); xlabel('n->'); 
+ylabel("Amplitude"); title("Output Sequence");
+% disp('The resultant is '); fliplr(y);

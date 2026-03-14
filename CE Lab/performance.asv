@@ -1,0 +1,79 @@
+clc; clear; close all;
+
+N = 1e5;
+snr = 0:0.5:20;
+SNR_const = 15;
+
+bits_bpsk = randi([0 1], N, 1);
+bpsk_sym = 2*bits_bpsk - 1;
+
+bits_qpsk = randi([0 1], 2*N, 1);
+I = 2*bits_qpsk(1:2:end)-1;
+Q = 2*bits_qpsk(2:2:end)-1;
+qpsk_sym = (I + 1j*Q)/sqrt(2);
+
+L = length(bpsk_sym);
+f = (-L/2:L/2-1)/L;
+bpsk_psd = abs(fftshift(fft(bpsk_sym))).^2 / L;
+qpsk_psd = abs(fftshift(fft(qpsk_sym))).^2 / L; 
+
+figure;
+plot(f, 10*log10(bpsk_psd/max(bpsk_psd)), 'b'); hold on;
+plot(f, 10*log10(qpsk_psd/max(qpsk_psd)), 'y');
+xlabel('Normalized Frequency'); ylabel('PSD (dB)');
+title('BPSK vs QPSK Baseband PSD');
+legend('BPSK','QPSK'); grid on;
+
+ber_bpsk = zeros(size(snr));
+ber_qpsk = zeros(size(snr));
+
+for i = 1:length(snr)
+    bits = randi([0 1], N, 1);
+    sym = 2*bits - 1;
+    Es = mean(abs(sym).^2);
+    N0 = Es / 10^(snr(i)/10);
+    noise = sqrt(N0/2)*randn(size(sym));
+    rx = sym + noise;
+    ber_bpsk(i) = mean(bits ~= (rx>0));
+    
+    bits = randi([0 1], 2*N, 1);
+    I = 2*bits(1:2:end)-1;
+    Q = 2*bits(2:2:end)-1;
+    sym = (I + 1j*Q)/sqrt(2);
+    Es = mean(abs(sym).^2);
+    N0 = Es / 10^(snr(i)/10);
+    noise = sqrt(N0/2)*(randn(size(sym)) + 1j*randn(size(sym)));
+    rx = sym + noise;
+    rx_bits = zeros(2*N,1);
+    rx_bits(1:2:end) = real(rx)>0;
+    rx_bits(2:2:end) = imag(rx)>0;
+    ber_qpsk(i) = mean(bits ~= rx_bits);
+end
+
+figure;
+plot(snr, log10(ber_bpsk), , snr, log10(ber_qpsk), 'r');
+xlabel('SNR (dB)'); ylabel('log_{10}(BER)');
+title('BER vs SNR'); legend('BPSK','QPSK'); grid on;
+
+bits = randi([0 1], N, 1);
+sym = 2*bits - 1;
+Es = mean(abs(sym).^2);
+N0 = Es / 10^(SNR_const/10);
+rx_bpsk = sym + sqrt(N0/2)*randn(size(sym));
+
+bits = randi([0 1], 2*N, 1);
+I = 2*bits(1:2:end)-1;
+Q = 2*bits(2:2:end)-1;
+sym_qpsk = (I + 1j*Q)/sqrt(2);
+Es = mean(abs(sym_qpsk).^2);
+N0 = Es / 10^(SNR_const/10);
+rx_qpsk = sym_qpsk + sqrt(N0/2)*(randn(size(sym_qpsk)) + 1j*randn(size(sym_qpsk)));
+
+figure;
+subplot(1,2,1);
+plot(real(rx_bpsk), imag(rx_bpsk), '.'); grid on;
+xlabel('I'); ylabel('Q'); title(['BPSK Constellation at SNR = ', num2str(SNR_const), ' dB']);
+
+subplot(1,2,2);
+plot(real(rx_qpsk), imag(rx_qpsk), '.'); grid on;
+xlabel('I'); ylabel('Q'); title(['QPSK Constellation at SNR = ', num2str(SNR_const), ' dB']);

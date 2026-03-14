@@ -1,0 +1,15 @@
+clc; clear all; close all;
+n=-10:10;
+x=(-0.9).^n;
+M=100;
+k=-2*M:2*M;
+w=(pi/M)*k;
+W=exp(-1j*pi/M).^(n'*k);
+X=x*W;
+figure;
+subplot(2, 1, 1);
+plot(w/pi, abs(X)); xlabel('w-> (normalised frequency)'); 
+ylabel('|X(e^jw)|'); title('Magnitude response');
+subplot(2, 1, 2);
+plot(w/pi, angle(X)); xlabel('w-> (normalised frequency)'); 
+ylabel('Angle of X(e^jw) in radians'); title('Phase response');

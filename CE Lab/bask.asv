@@ -1,0 +1,20 @@
+%BASK
+clc; clear all; close all;
+x=randi([0, 1], 1, 10);
+Eb=1
+
+fc=2;
+fs=100;
+t=0:1/fs:10-1/fs;
+s1=sprt(2*Eb/Tb)*cos(2*pi*fc.*t);
+subplot(411);
+stairs(0:9, x); xlabel("Time"); title("Binary sequence"); ylim([-0.5 1.5]); xlim([0 10]);
+subplot(412);
+plot(t, s1); xlabel("Time"); title("Carrier wave"); ylabel("Amplitude");
+m = repelem(x, fs);
+y=s1.*m;
+subplot(413);
+plot(t,y); xlabel("Time"); ylabel("Amplitude"); title("BASK"); 
+subplot(414);
+Y=fftshift(abs(fft(y)));
+plot(Y);
